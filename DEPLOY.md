@@ -1,62 +1,53 @@
-# huohua.11s.space 部署说明
+# huohua.11s.space 部署说明（Vercel）
 
-跳转页已发布到 GitHub Pages，**只剩一步 DNS 需要你在 Cloudflare 操作**。
+跟你的 `download.11s.space` 同一套做法：Vercel 导入 GitHub 仓库 + 加自定义域名。
+Vercel 会自动在 Cloudflare 里指引 DNS，并自动签发 HTTPS 证书。
 
-## 现状
+## 一次性配置（约 2 分钟）
 
-| 项目 | 状态 |
+1. 打开 https://vercel.com/new
+2. 选 **Import Git Repository** → 找到 `TomShi11/huohua-11s-space` → **Import**
+3. Framework Preset 保持 **Other**，其余全部默认 → **Deploy**
+4. 部署完成后进项目 → **Settings → Domains** → 输入 `huohua.11s.space` → **Add**
+5. Vercel 会给出一条 CNAME 记录，到 Cloudflare → `11s.space` → DNS 添加：
+
+   | 字段 | 值 |
+   |---|---|
+   | Type | `CNAME` |
+   | Name | `huohua` |
+   | Target | Vercel 页面上显示的那个地址（形如 `xxxx.vercel-dns-017.com`） |
+   | Proxy | **DNS only（灰云）** |
+
+   > 灰云是必须的。开橙云代理会和 Vercel 的证书签发冲突。
+   > 你的 `download.11s.space` 现在也是这么配的（解析到 `f8c459f9908c3a32.vercel-dns-017.com`）。
+
+6. 回 Vercel 的 Domains 页面等状态变成 **Valid Configuration**，HTTPS 自动就绪。
+
+## 之后就不用管了
+
+`main` 分支每次 push，Vercel 自动重新部署。
+
+**扩展发新版本时本站无需任何改动** —— 下载按钮指向
+`releases/latest/download/douyin-spark-keeper.zip`，GitHub 自动解析到最新 release。
+只要保证新 release 的附件名仍是 `douyin-spark-keeper.zip`，且不是 draft / prerelease。
+
+## 附带的短链接
+
+`vercel.json` 里配了两条，方便分享：
+
+| 地址 | 跳转到 |
 |---|---|
-| 仓库 | https://github.com/TomShi11/huohua-11s-space |
-| Pages 构建 | ✅ built（无错误） |
-| CNAME 文件 | ✅ `huohua.11s.space` |
-| DNS 解析 | ❌ 未配置 → 当前访问 502 |
+| `huohua.11s.space/dl` | 直接下载最新版 zip |
+| `huohua.11s.space/github` | 仓库主页 |
 
-## 你需要做的（1 分钟）
-
-Cloudflare → 选择 `11s.space` → **DNS** → **Add record**：
-
-| 字段 | 值 |
-|---|---|
-| Type | `CNAME` |
-| Name | `huohua` |
-| Target | `tomshi11.github.io` |
-| Proxy status | **DNS only（灰云）** |
-| TTL | Auto |
-
-> ⚠️ 必须选**灰云**（DNS only）。开橙云代理会让 GitHub 无法验证域名归属，
-> HTTPS 证书签发不了，并可能出现重定向循环。
-> 证书签好后想开橙云再改也可以。
-
-## 配置完成后
-
-1. 等 1–5 分钟生效，访问 http://huohua.11s.space 确认能打开并自动下载
-2. 回到仓库 **Settings → Pages**，勾选 **Enforce HTTPS**
-   （证书由 GitHub 自动签发，通常几分钟内可用；灰云是前提）
-
-验证命令：
+## 扩展发版流程
 
 ```powershell
-Resolve-DnsName huohua.11s.space
-curl.exe -sI https://huohua.11s.space | Select-Object -First 3
-```
-
-## 日常维护
-
-**发布扩展新版本后，本站无需任何改动。**
-
-下载按钮指向 `releases/latest/download/douyin-spark-keeper.zip`，
-GitHub 会自动解析到最新 release。只要保证：
-
-- 新 release 里的附件文件名仍是 `douyin-spark-keeper.zip`
-- release 不是 draft / prerelease
-
-发版命令（在扩展目录）：
-
-```powershell
-# 1. 改 manifest.json 里的 version
-# 2. 重新打包
-pwsh -NoProfile -File ..\..\work\pack.ps1
+# 1. 改 outputs/douyin-spark-keeper/manifest.json 的 version
+# 2. 重新打包（会生成带顶层文件夹的 zip）
+pwsh -NoProfile -File work\pack.ps1
 # 3. 提交并发布
+cd outputs\douyin-spark-keeper
 git add -A; git commit -m "release: vX.Y.Z"; git push
-gh release create vX.Y.Z ..\douyin-spark-keeper.zip --title "vX.Y.Z" --notes "..."
+gh release create vX.Y.Z ..\douyin-spark-keeper.zip --title "vX.Y.Z" --notes "更新说明"
 ```
