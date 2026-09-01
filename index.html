@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>下载抖音续火花助手</title>
+<meta name="description" content="抖音续火花助手 — 每天自动为抖音好友续火花的 Microsoft Edge 扩展。">
+<link rel="icon" href="icon.png">
+
+<style>
+  :root{--accent:#fe2c55}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;
+    font:15px/1.7 "Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
+    color:#17171a;background:#f6f6f8;padding:24px}
+  @media(prefers-color-scheme:dark){body{color:#f2f2f5;background:#16161a}.card{background:#1f1f26!important;border-color:#32323c!important}.step{background:#16161a!important}code{background:rgba(127,127,140,.2)!important}}
+  .card{background:#fff;border:1px solid #e7e7ed;border-radius:16px;
+    padding:38px 34px;max-width:520px;width:100%;text-align:center;
+    box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 28px rgba(0,0,0,.07)}
+  .logo{width:66px;height:66px;border-radius:17px;margin:0 auto 18px;
+    background:linear-gradient(150deg,#ff7a3c,#fe2c55 70%);
+    display:grid;place-items:center;font-size:34px;
+    box-shadow:0 4px 16px rgba(254,44,85,.34)}
+  h1{font-size:21px;margin:0 0 8px;font-weight:600}
+  .sub{color:#82838c;font-size:14px;margin:0 0 24px}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+    padding:13px 30px;border-radius:10px;font-weight:600;font-size:15px;
+    box-shadow:0 3px 12px rgba(254,44,85,.32);transition:transform .06s,background .15s}
+  .btn:hover{background:#ec2049}.btn:active{transform:translateY(1px)}
+  .status{color:#82838c;font-size:13px;margin:16px 0 0;min-height:20px}
+  .steps{text-align:left;margin:26px 0 0;padding:18px 20px;background:#f6f6f8;
+    border-radius:10px;font-size:13.5px}
+  @media(prefers-color-scheme:dark){.steps{background:#16161a}}
+  .steps b{display:block;margin-bottom:8px;font-size:13px;color:#82838c;font-weight:600}
+  .steps ol{margin:0;padding-left:20px}.steps li{margin:5px 0}
+  code{background:rgba(127,127,140,.14);padding:1.5px 6px;border-radius:4px;
+    font-family:Consolas,monospace;font-size:12.5px}
+  .foot{margin:22px 0 0;font-size:12.5px;color:#82838c}
+  .foot a{color:var(--accent);text-decoration:none}.foot a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🔥</div>
+  <h1>抖音续火花助手</h1>
+  <p class="sub">每天自动为抖音好友续火花的 Edge 扩展<br>后台静默执行，同一天不重复发送</p>
+
+  <a class="btn" id="dl" href="https://github.com/TomShi11/douyin-spark-keeper/releases/latest/download/douyin-spark-keeper.zip">⬇ 立即下载</a>
+  <p class="status" id="st">正在开始下载…</p>
+
+  <div class="steps">
+    <b>安装步骤</b>
+    <ol>
+      <li>解压到一个<strong>长期保留</strong>的目录</li>
+      <li>打开 <code>edge://extensions/</code></li>
+      <li>启用左下角<strong>开发人员模式</strong></li>
+      <li>点<strong>加载解压缩的扩展</strong>，选解压出的文件夹</li>
+    </ol>
+  </div>
+
+  <p class="foot">
+    <a href="https://github.com/TomShi11/douyin-spark-keeper">源码与说明</a> ·
+    <a href="https://github.com/TomShi11/douyin-spark-keeper/releases/latest">历史版本</a>
+  </p>
+</div>
+<script>
+  // 直接触发下载，不依赖 meta refresh（避免把当前页替换掉）
+  (function () {
+    var url = document.getElementById('dl').href;
+    var st = document.getElementById('st');
+    try {
+      var a = document.createElement('a');
+      a.href = url; a.download = '';
+      document.body.appendChild(a); a.click(); a.remove();
+      st.textContent = '下载已开始。没反应？点上面的按钮。';
+    } catch (e) {
+      location.href = url;
+    }
+  })();
+</script>
+</body>
+</html>
